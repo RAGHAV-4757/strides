@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>STRIDES 2K26 - 3D Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- 1. CORE SETTINGS --- */
+        :root { --primary: #00ffcc; --secondary: #0072ff; --bg-dark: #000000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            height: 100vh; width: 100vw;
+            overflow: hidden;
+            perspective: 1500px;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+        }
+
+        /* --- 2. 3D WORLD WRAPPER --- */
+        #world-3d {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* --- 3. BACKGROUND LAYERS --- */
+        .bg-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; transform-style: preserve-3d;
+        }
+
+        /* MOVING STARS */
+        .star {
+            position: absolute; top: 50%; left: 50%;
+            width: 2px; height: 2px; 
+            background: #ffffff; 
+            box-shadow: 0 0 4px #ffffff, 0 0 8px var(--primary);
+            border-radius: 50%; opacity: 0;
+            animation: warpStar 3s linear infinite;
+        }
+        @keyframes warpStar {
+            0% { transform: translate3d(var(--x), var(--y), -1000px); opacity: 0; }
+            10% { opacity: 1; } 
+            90% { opacity: 1; }
+            100% { transform: translate3d(var(--x), var(--y), 1000px); opacity: 0; }
+        }
+
+        /* 3D GLOBE */
+        .globe-wireframe {
+            position: absolute; top: 50%; left: 50%;
+            width: 600px; height: 600px;
+            transform: translate(-50%, -50%) translateZ(-300px);
+            transform-style: preserve-3d;
+            animation: rotateGlobe 50s linear infinite;
+        }
+        .ring {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 255, 204, 0.5);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2), inset 0 0 20px rgba(0, 255, 204, 0.2);
+        }
+        .ring:nth-child(1) { transform: rotateY(0deg); }
+        .ring:nth-child(2) { transform: rotateY(60deg); }
+        .ring:nth-child(3) { transform: rotateY(120deg); }
+        .ring:nth-child(4) { transform: rotateX(90deg); }
+        .ring:nth-child(5) { transform: rotateX(45deg); }
+        .ring:nth-child(6) { transform: rotateX(-45deg); }
+
+        @keyframes rotateGlobe { 
+            from { transform: translate(-50%, -50%) translateZ(-300px) rotateY(0deg) rotateX(0deg); } 
+            to { transform: translate(-50%, -50%) translateZ(-300px) rotateY(360deg) rotateX(360deg); } 
+        }
+
+        /* --- 4. PAGE SECTIONS --- */
+        .page-section {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            transform-style: preserve-3d; opacity: 0; transition: opacity 0.5s;
+        }
+        .page-section.active { display: flex; opacity: 1; }
+
+        .scroll-view {
+            width: 100%; height: 100%;
+            overflow-y: auto; overflow-x: hidden;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 50px 0;
+            transform-style: preserve-3d;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* 3D Depth Utilities */
+        .z-1 { transform: translateZ(30px); }
+        .z-2 { transform: translateZ(60px); }
+        .z-3 { transform: translateZ(100px); }
+        .z-4 { transform: translateZ(150px); }
+
+        /* PAGE 1 STYLES */
+        .college-name { font-family: 'Orbitron'; font-size: 1.5rem; color: var(--primary); letter-spacing: 4px; text-shadow: 0 0 15px var(--primary); margin-bottom: 20px;}
+        .dept-box { background: rgba(0,20,20,0.85); border: 1px solid var(--primary); padding: 15px 40px; margin-bottom: 40px; box-shadow: 0 0 30px rgba(0,255,204,0.2); }
+        .main-title { font-family: 'Orbitron'; font-size: 7rem; font-weight: 900; color: #fff; text-shadow: 0 0 30px rgba(255,255,255,0.5); margin: 10px 0; }
+        .main-title span { color: var(--primary); text-shadow: 0 0 40px var(--primary); }
+        
+        .enter-btn {
+            background: rgba(0,0,0,0.6); border: 2px solid var(--primary); color: var(--primary);
+            padding: 15px 50px; font-family: 'Orbitron'; font-size: 1.2rem; cursor: pointer;
+            transition: 0.3s; margin-top: 40px; text-transform: uppercase;
+        }
+        .enter-btn:hover { background: var(--primary); color: #000; box-shadow: 0 0 40px var(--primary); transform: translateZ(160px) scale(1.1); }
+
+        /* PAGE 2 STYLES */
+        .grid-header { text-align: center; margin-bottom: 40px; }
+        .grid-title { font-family: 'Orbitron'; font-size: 4rem; margin: 0; text-shadow: 0 0 20px var(--primary); text-align: center; }
+        .grid-sub { font-family: 'Orbitron'; font-size: 2.8rem; color: #00ffcc; letter-spacing: 4px; margin-top: 15px; font-weight: bold; text-shadow: 0 0 15px rgba(0, 255, 204, 0.5); }
+        .grid-instr { color: #fff; font-size: 1.4rem; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; }
+
+        .dignitary-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+            width: 90%; max-width: 1200px; margin-bottom: 50px;
+            transform-style: preserve-3d;
+        }
+        .dignitary-card {
+            background: rgba(0, 10, 15, 0.85); border: 1px solid var(--primary);
+            padding: 25px; text-align: center; cursor: pointer; transition: 0.3s;
+            transform: translateZ(20px);
+        }
+        .dignitary-card:hover { transform: translateZ(50px) scale(1.05); background: rgba(0, 255, 204, 0.15); box-shadow: 0 0 30px rgba(0, 255, 204, 0.3); }
+        .card-name { font-family: 'Orbitron'; font-size: 1.1rem; font-weight: bold; }
+        .card-role { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 5px; }
+
+        /* UNIVERSAL INVITE BOX */
+        .main-invite-box {
+            width: 90%; max-width: 1000px;
+            border: 3px solid var(--secondary);
+            background: linear-gradient(180deg, rgba(0, 15, 30, 0.95), #000);
+            padding: 40px; text-align: center; margin-top: 20px;
+            box-shadow: 0 0 60px rgba(0, 114, 255, 0.4);
+            border-radius: 15px; cursor: pointer; transition: 0.3s; position: relative;
+            transform: translateZ(30px);
+        }
+        .main-invite-box:hover {
+            transform: scale(1.03) translateZ(50px);
+            background: linear-gradient(180deg, rgba(0, 40, 80, 0.95), #050505);
+            box-shadow: 0 0 80px rgba(0, 114, 255, 0.6);
+            border-color: #00ffcc;
+        }
+        .click-hint { position: absolute; bottom: 10px; right: 20px; font-size: 0.8rem; color: #aaa; animation: blink 2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* PAGE 3 STYLES */
+        .personal-card {
+            width: 95%; max-width: 900px;
+            border: 2px solid var(--primary);
+            background: rgba(5, 10, 15, 0.95);
+            box-shadow: 0 0 60px rgba(0, 255, 204, 0.2);
+            padding: 40px; text-align: center; margin: auto; position: relative;
+        }
+        .personal-welcome { font-family: 'Orbitron'; font-size: 2.2rem; margin-bottom: 20px; }
+        .personal-name { font-family: 'Orbitron'; font-size: 2.5rem; color: var(--primary); margin: 20px 0; }
+        .photo-box {
+            width: 180px; height: 180px; margin: 0 auto 30px;
+            border: 2px dashed var(--primary); background: #000;
+            display: flex; align-items: center; justify-content: center; color: #555;
+            overflow: hidden; /* Ensures photo stays inside */
+        }
+
+        /* Universal Poster Styling */
+        .universal-poster-space {
+            width: 100%; height: 600px; border: 1px solid #333; background: rgba(0,0,0,0.5);
+            margin: 20px 0; display: flex; align-items: center; justify-content: center; color: #444; font-size: 1.5rem;
+        }
+        .universal-poster-space img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* SIDE ROBOTS */
+        .side-bot {
+            position: absolute; top: 50%; 
+            width: 180px;
+            z-index: 10; pointer-events: none; display: none;
+        }
+        .side-bot-left { left: -300px; transform: translateY(-50%); }
+        .side-bot-right { right: -300px; transform: translateY(-50%) scaleX(-1); }
+
+        .bot-wrapper img { width: 100%; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 0 15px var(--primary)); }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+
+        /* Page 3 Robot Position - FAR */
+        @keyframes flyInCloseLeft { 0% { left: -300px; } 100% { left: calc(50% - 680px); } }
+        @keyframes flyInCloseRight { 0% { right: -300px; } 100% { right: calc(50% - 680px); } }
+        
+        @keyframes flyInWideLeft { 0% { left: -300px; } 100% { left: 1%; } }
+        @keyframes flyInWideRight { 0% { right: -300px; } 100% { right: 1%; } }
+
+        .page-active-close .side-bot-left { display: block; animation: flyInCloseLeft 1s ease-out forwards 0.5s; }
+        .page-active-close .side-bot-right { display: block; animation: flyInCloseRight 1s ease-out forwards 0.5s; }
+        .page-active-wide .side-bot-left { display: block; animation: flyInWideLeft 1s ease-out forwards 0.5s; }
+        .page-active-wide .side-bot-right { display: block; animation: flyInWideRight 1s ease-out forwards 0.5s; }
+
+        /* --- 5. TRANSITION OVERLAY --- */
+        #transition-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; display: none; pointer-events: none; }
+        .trans-bot { position: absolute; width: 250px; z-index: 5; filter: drop-shadow(0 0 20px var(--primary)); }
+        #crash-energy {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            width: 50px; height: 50px; background: radial-gradient(circle, #fff 0%, var(--primary) 40%, transparent 70%);
+            border-radius: 50%; z-index: 4; opacity: 0;
+        }
+        #flash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; z-index: 10; pointer-events: none; }
+
+        @keyframes crashLeft { 0% { left: -300px; bottom: -300px; transform: scale(0.5) rotate(15deg); } 100% { left: calc(50% - 150px); bottom: calc(50% - 100px); transform: scale(1.2) rotate(0deg); } }
+        @keyframes crashRight { 0% { right: -300px; bottom: -300px; transform: scaleX(-1) scale(0.5) rotate(-15deg); } 100% { right: calc(50% - 150px); bottom: calc(50% - 100px); transform: scaleX(-1) scale(1.2) rotate(0deg); } }
+        @keyframes explode { 0% { transform: translate(-50%, -50%) scale(0); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(40); opacity: 0; } }
+        @keyframes whiteFlash { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+
+        /* --- MOBILE --- */
+        @media (max-width: 768px) {
+            .main-title { font-size: 3.5rem; }
+            .grid-title { font-size: 2.5rem; }
+            .grid-sub { font-size: 1.8rem; }
+            .dignitary-grid { grid-template-columns: 1fr; }
+            .side-bot { width: 80px; } 
+            .universal-poster-space { height: 300px; }
+            
+            @keyframes flyInCloseLeft { 100% { left: 0; top: 10%; } }
+            @keyframes flyInCloseRight { 100% { right: 0; top: 10%; } }
+            @keyframes flyInWideLeft { 100% { left: 0; top: 5%; } }
+            @keyframes flyInWideRight { 100% { right: 0; top: 5%; } }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="world-3d">
+        <div class="bg-layer">
+            <div id="starField"></div>
+            <div class="globe-wireframe">
+                <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+                <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+            </div>
+        </div>
+
+        <div id="page-1" class="page-section active">
+            <div class="college-name z-2">Pragati Engineering College</div>
+            <div class="dept-box z-3"><h3>DEPARTMENT OF CSE (AI)</h3></div>
+            <h1 class="main-title z-3">EBHIGNA <span>2K26</span></h1>
+            <button class="enter-btn z-4" onclick="navigate('page-1', 'page-2')">LETS GO</button>
+        </div>
+
+        <div id="page-2" class="page-section">
+            <div class="side-bot side-bot-left bot-wrapper"><img src="https://cdn-icons-png.flaticon.com/512/4712/4712038.png"></div>
+            <div class="side-bot side-bot-right bot-wrapper"><img src="https://cdn-icons-png.flaticon.com/512/4712/4712038.png"></div>
+
+            <div class="scroll-view">
+                <div class="grid-header z-2">
+                    <h1 class="grid-title">EBHIGNA 2K26</h1>
+                    <div class="grid-sub">INVITATIONS</div>
+                    <div class="grid-instr">Select Your Invitation</div>
+                </div>
+
+                <div class="dignitary-grid z-2" id="grid-container"></div>
+
+                <div class="main-invite-box z-3" onclick="openUniversalInvite()">
+                    <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to Open</div>
+                    <p style="color:#ccc; letter-spacing:2px; font-size:0.8rem; text-transform:uppercase;">The Management, Staff & Students Of</p>
+                    <h2 style="font-family:'Orbitron'; font-size:1.8rem; margin:10px 0; color:#fff;">PRAGATI ENGINEERING COLLEGE</h2>
+                    <p style="color:#00ffcc; margin-bottom:15px;">(Autonomous)</p>
+                    <p style="font-family:'Orbitron'; color:#00bfff; font-size:1.2rem;">Cordially Invite You To</p>
+                    <h1 style="font-family:'Orbitron'; font-size:3.5rem; margin:15px 0; color:#fff; text-shadow:0 0 10px #00ffcc;">EBHIGNA 2K26</h1>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-3" class="page-section">
+            
+            <div class="side-bot side-bot-left bot-wrapper"><img src="https://cdn-icons-png.flaticon.com/512/4712/4712038.png"></div>
+            <div class="side-bot side-bot-right bot-wrapper"><img src="https://cdn-icons-png.flaticon.com/512/4712/4712038.png"></div>
+
+            <div class="scroll-view">
+                <div class="personal-card z-3">
+                    <div class="personal-welcome">HEARTILY WELCOME TO <br><span>EBHIGNA 2K26</span></div>
+                    
+                    <div id="personal-content">
+                        <h2 class="personal-name" id="p-name">Name</h2>
+                        <p class="card-role" id="p-role" style="font-size:1.2rem;">Role</p>
+                        <div class="photo-box"><span>Add Photo Here</span></div>
+                    </div>
+
+                    <div id="universal-content" style="display:none;">
+                        <div class="universal-poster-space">
+                            <img src="invites.jpeg" style="display:block; width:100%; height:100%; object-fit:contain;" onerror="this.style.display='none'; this.parentElement.innerText='Poster Not Found - Rename file to poster.jpg'">
+                        </div>
+                    </div>
+                    
+                    <button class="enter-btn z-4" onclick="navigate('page-3', 'page-2', true)">BACK TO LIST</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="transition-overlay">
+        <div id="flash-screen"></div>
+        <div id="crash-energy"></div>
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712038.png" class="trans-bot" id="t-bot1">
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712038.png" class="trans-bot" id="t-bot2">
+    </div>
+
+    <script>
+        // --- DATA (RENAME YOUR PHOTOS TO MATCH THESE) ---
+        const dignitaries = [
+            { name: "Dr. P. Krishna Rao", role: "Chairman", img: "chairman.jpeg" },
+            { name: "Sri. M.V. Haranatha Babu", role: "Director of Management", img: "director_m.jpeg" },
+            { name: "Sri. M. Satish", role: "Vice President", img: "vp.jpeg" },
+            { name: "Dr. K. Satyanarayana", role: "Director of Academics", img: "director_a.jpeg" },
+            { name: "Dr. G. Naresh", role: "Principal", img: "principal.jpeg" },
+            { name: "Dr. M. Radhika Mani", role: "Dean – CDC", img: "cdc.jpeg" },
+            { name: "Dr. Y. Jayababu", role: "Controller of Examinations", img: "coe.jpeg" },
+            { name: "Mr. G. Satya Mohan Chowdary", role: "Convener", img: "convenor.jpeg" },
+            { name: "Mrs. K. Lakshmi Viveka", role: "Head of CSE (AI)", img: "hod.jpeg" }
+        ];
+
+        // --- 1. 3D ENGINE ---
+        const world = document.getElementById('world-3d');
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 2;
+            const y = (e.clientY / window.innerHeight - 0.5) * 2; 
+            world.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 8}deg)`;
+        });
+
+        // --- 2. INIT GRID ---
+        const grid = document.getElementById('grid-container');
+        dignitaries.forEach((p, i) => {
+            let card = document.createElement('div');
+            card.className = 'dignitary-card';
+            card.innerHTML = `<div class="card-role">${p.role}</div><div class="card-name">${p.name}</div>`;
+            card.onclick = () => openPersonalInvite(i);
+            grid.appendChild(card);
+        });
+
+        // --- 3. OPEN FUNCTIONS (UPDATED WITH PHOTO LOGIC) ---
+        function openPersonalInvite(index) {
+            const person = dignitaries[index];
+            document.getElementById('personal-content').style.display = 'block';
+            document.getElementById('universal-content').style.display = 'none';
+            
+            document.getElementById('p-name').innerText = person.name;
+            document.getElementById('p-role').innerText = person.role;
+            
+            // INJECT PHOTO
+            const photoBox = document.querySelector('.photo-box');
+            photoBox.innerHTML = `<img src="${person.img}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/847/847969.png'">`;
+
+            navigate('page-2', 'page-3');
+        }
+
+        function openUniversalInvite() {
+            document.getElementById('personal-content').style.display = 'none';
+            document.getElementById('universal-content').style.display = 'block';
+            navigate('page-2', 'page-3');
+        }
+
+        // --- 4. TRANSITION ---
+        const overlay = document.getElementById('transition-overlay');
+        const tBot1 = document.getElementById('t-bot1');
+        const tBot2 = document.getElementById('t-bot2');
+        const energy = document.getElementById('crash-energy');
+        const flash = document.getElementById('flash-screen');
+
+        function navigate(fromId, toId, isBack = false) {
+            const fromPage = document.getElementById(fromId);
+            const toPage = document.getElementById(toId);
+
+            fromPage.classList.remove('active');
+            fromPage.classList.remove('page-active-close'); 
+            fromPage.classList.remove('page-active-wide');
+
+            if(isBack) {
+                toPage.classList.add('active');
+                if(toId === 'page-2') toPage.classList.add('page-active-wide');
+                if(toId === 'page-3') toPage.classList.add('page-active-close');
+                return;
+            }
+
+            overlay.style.display = 'block';
+            tBot1.style.animation = 'none'; tBot1.offsetHeight;
+            tBot2.style.animation = 'none'; tBot2.offsetHeight;
+            energy.style.animation = 'none'; energy.offsetHeight;
+            flash.style.animation = 'none'; flash.offsetHeight;
+
+            tBot1.style.animation = 'crashLeft 1s ease-in forwards';
+            tBot2.style.animation = 'crashRight 1s ease-in forwards';
+
+            setTimeout(() => {
+                energy.style.animation = 'explode 0.6s ease-out forwards';
+                flash.style.animation = 'whiteFlash 1s ease-out forwards';
+                
+                tBot1.style.opacity = '0';
+                tBot2.style.opacity = '0';
+
+                setTimeout(() => {
+                    toPage.classList.add('active');
+                    if(toId === 'page-2') toPage.classList.add('page-active-wide');
+                    if(toId === 'page-3') toPage.classList.add('page-active-close');
+                }, 200);
+
+            }, 1000);
+
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                tBot1.style.opacity = '1'; tBot2.style.opacity = '1';
+            }, 2000);
+        }
+
+        // --- 5. MOVING STARS (BRIGHTER & MORE) ---
+        const bgLayer = document.querySelector('.bg-layer');
+        for(let i=0; i<250; i++){
+            let s = document.createElement('div');
+            s.className='star';
+            let x = (Math.random() - 0.5) * window.innerWidth * 2;
+            let y = (Math.random() - 0.5) * window.innerHeight * 2;
+            s.style.setProperty('--x', `${x}px`);
+            s.style.setProperty('--y', `${y}px`);
+            s.style.animationDelay = Math.random() * 3 + 's';
+            bgLayer.appendChild(s);
+        }
+    </script>
+</body>
+</html>
