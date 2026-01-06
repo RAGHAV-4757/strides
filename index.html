@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>STRIDES 2K26 - 3D Experience</title>
+    <title>EBHIGNA 2K26 - 3D Experience</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -115,9 +115,28 @@
 
         /* PAGE 2 STYLES */
         .grid-header { text-align: center; margin-bottom: 40px; }
-        .grid-title { font-family: 'Orbitron'; font-size: 4rem; margin: 0; text-shadow: 0 0 20px var(--primary); text-align: center; }
-        .grid-sub { font-family: 'Orbitron'; font-size: 2.8rem; color: #00ffcc; letter-spacing: 4px; margin-top: 15px; font-weight: bold; text-shadow: 0 0 15px rgba(0, 255, 204, 0.5); }
-        .grid-instr { color: #fff; font-size: 1.4rem; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        
+        /* Updated Page 2 Headings */
+        .organizing-text {
+            font-family: 'Orbitron';
+            font-size: 1.5rem;
+            color: #00ffcc;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+        }
+        .ebhigna-title {
+            font-family: 'Orbitron'; 
+            font-size: 5rem; 
+            margin: 0; 
+            color: #fff;
+            text-shadow: 0 0 30px var(--primary); 
+            text-align: center;
+            font-weight: 900;
+        }
+        
+        .grid-instr { color: #fff; font-size: 1.2rem; margin-top: 15px; text-transform: uppercase; letter-spacing: 2px; }
 
         .dignitary-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
@@ -133,12 +152,12 @@
         .card-name { font-family: 'Orbitron'; font-size: 1.1rem; font-weight: bold; }
         .card-role { color: var(--primary); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 5px; }
 
-        /* UNIVERSAL INVITE BOX */
+        /* UNIVERSAL INVITE BOX (Page 2) */
         .main-invite-box {
             width: 90%; max-width: 1000px;
             border: 3px solid var(--secondary);
             background: linear-gradient(180deg, rgba(0, 15, 30, 0.95), #000);
-            padding: 40px; text-align: center; margin-top: 20px;
+            padding: 40px; text-align: center; margin-top: 20px; margin-bottom: 50px;
             box-shadow: 0 0 60px rgba(0, 114, 255, 0.4);
             border-radius: 15px; cursor: pointer; transition: 0.3s; position: relative;
             transform: translateZ(30px);
@@ -166,15 +185,13 @@
             width: 180px; height: 180px; margin: 0 auto 30px;
             border: 2px dashed var(--primary); background: #000;
             display: flex; align-items: center; justify-content: center; color: #555;
-            overflow: hidden; /* Ensures photo stays inside */
         }
 
-        /* Universal Poster Styling */
         .universal-poster-space {
             width: 100%; height: 600px; border: 1px solid #333; background: rgba(0,0,0,0.5);
             margin: 20px 0; display: flex; align-items: center; justify-content: center; color: #444; font-size: 1.5rem;
         }
-        .universal-poster-space img { width: 100%; height: 100%; object-fit: contain; }
+        .universal-poster-space img { width: 100%; height: 100%; object-fit: contain; display: none; }
 
         /* SIDE ROBOTS */
         .side-bot {
@@ -188,7 +205,7 @@
         .bot-wrapper img { width: 100%; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 0 15px var(--primary)); }
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
 
-        /* Page 3 Robot Position - FAR */
+        /* Page 3 Robot Position - FAR (680px) */
         @keyframes flyInCloseLeft { 0% { left: -300px; } 100% { left: calc(50% - 680px); } }
         @keyframes flyInCloseRight { 0% { right: -300px; } 100% { right: calc(50% - 680px); } }
         
@@ -218,8 +235,8 @@
         /* --- MOBILE --- */
         @media (max-width: 768px) {
             .main-title { font-size: 3.5rem; }
-            .grid-title { font-size: 2.5rem; }
-            .grid-sub { font-size: 1.8rem; }
+            .organizing-text { font-size: 1rem; }
+            .ebhigna-title { font-size: 3rem; }
             .dignitary-grid { grid-template-columns: 1fr; }
             .side-bot { width: 80px; } 
             .universal-poster-space { height: 300px; }
@@ -255,21 +272,21 @@
 
             <div class="scroll-view">
                 <div class="grid-header z-2">
-                    <h1 class="grid-title">EBHIGNA 2K26</h1>
-                    <div class="grid-sub">INVITATIONS</div>
-                    <div class="grid-instr">Select Your Invitation</div>
+                    <div class="organizing-text">Department of CSE (AI) Organizing</div>
+                    <h1 class="ebhigna-title">EBHIGNA 2K26</h1>
+                </div>
+
+                <div class="main-invite-box z-3" onclick="openUniversalInvite()">
+                    <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to Open</div>
+                    <p style="color:#ccc; letter-spacing:2px; font-size:0.8rem; text-transform:uppercase;">To The Management, Staff & Students Of</p>
+                    <h2 style="font-family:'Orbitron'; font-size:1.8rem; margin:10px 0; color:#fff;">PRAGATI ENGINEERING COLLEGE</h2>
+                    <p style="color:#00ffcc; margin-bottom:15px;">(Autonomous)</p>
+                    <p style="font-family:'Orbitron'; color:#00bfff; font-size:1.2rem;">We Cordially Invite You To</p>
+                    <h1 style="font-family:'Orbitron'; font-size:3.5rem; margin:15px 0; color:#fff; text-shadow:0 0 10px #00ffcc;">EBHIGNA 2K26</h1>
                 </div>
 
                 <div class="dignitary-grid z-2" id="grid-container"></div>
 
-                <div class="main-invite-box z-3" onclick="openUniversalInvite()">
-                    <div class="click-hint"><i class="fas fa-hand-pointer"></i> Click to Open</div>
-                    <p style="color:#ccc; letter-spacing:2px; font-size:0.8rem; text-transform:uppercase;">The Management, Staff & Students Of</p>
-                    <h2 style="font-family:'Orbitron'; font-size:1.8rem; margin:10px 0; color:#fff;">PRAGATI ENGINEERING COLLEGE</h2>
-                    <p style="color:#00ffcc; margin-bottom:15px;">(Autonomous)</p>
-                    <p style="font-family:'Orbitron'; color:#00bfff; font-size:1.2rem;">Cordially Invite You To</p>
-                    <h1 style="font-family:'Orbitron'; font-size:3.5rem; margin:15px 0; color:#fff; text-shadow:0 0 10px #00ffcc;">EBHIGNA 2K26</h1>
-                </div>
             </div>
         </div>
 
@@ -280,7 +297,7 @@
 
             <div class="scroll-view">
                 <div class="personal-card z-3">
-                    <div class="personal-welcome">HEARTILY WELCOME TO <br><span>EBHIGNA 2K26</span></div>
+                    <div class="personal-welcome">CORDIALLY WELCOME TO <br><span>EBHIGNA 2K26</span></div>
                     
                     <div id="personal-content">
                         <h2 class="personal-name" id="p-name">Name</h2>
@@ -290,7 +307,7 @@
 
                     <div id="universal-content" style="display:none;">
                         <div class="universal-poster-space">
-                            <img src="invites.jpeg" style="display:block; width:100%; height:100%; object-fit:contain;" onerror="this.style.display='none'; this.parentElement.innerText='Poster Not Found - Rename file to poster.jpg'">
+                            <img src="invites.jpeg" style="display:block; width:100%; height:100%; object-fit:contain;" onerror="this.style.display='none'; this.parentElement.innerText='Poster Not Found - Rename file to invites.jpeg'">
                         </div>
                     </div>
                     
@@ -311,15 +328,15 @@
     <script>
         // --- DATA (RENAME YOUR PHOTOS TO MATCH THESE) ---
         const dignitaries = [
-            { name: "Dr. P. Krishna Rao", role: "Chairman", img: "chairman.jpeg" },
+            { name: "Dr. P. Krishna Rao", role: "Chief Patron", img: "chairman.jpeg" },
             { name: "Sri. M.V. Haranatha Babu", role: "Director of Management", img: "director_m.jpeg" },
             { name: "Sri. M. Satish", role: "Vice President", img: "vp.jpeg" },
             { name: "Dr. K. Satyanarayana", role: "Director of Academics", img: "director_a.jpeg" },
             { name: "Dr. G. Naresh", role: "Principal", img: "principal.jpeg" },
             { name: "Dr. M. Radhika Mani", role: "Dean – CDC", img: "cdc.jpeg" },
             { name: "Dr. Y. Jayababu", role: "Controller of Examinations", img: "coe.jpeg" },
-            { name: "Mr. G. Satya Mohan Chowdary", role: "Convener", img: "convenor.jpeg" },
-            { name: "Mrs. K. Lakshmi Viveka", role: "Head of CSE (AI)", img: "hod.jpeg" }
+            { name: "Mr. G. Satya Mohan Chowdary", role: "Convenor", img: "convenor.jpeg" },
+            { name: "Mrs. K. Lakshmi Viveka", role: "Head of Dept CSE (AI)", img: "hod.jpeg" }
         ];
 
         // --- 1. 3D ENGINE ---
@@ -340,7 +357,7 @@
             grid.appendChild(card);
         });
 
-        // --- 3. OPEN FUNCTIONS (UPDATED WITH PHOTO LOGIC) ---
+        // --- 3. OPEN FUNCTIONS ---
         function openPersonalInvite(index) {
             const person = dignitaries[index];
             document.getElementById('personal-content').style.display = 'block';
@@ -349,7 +366,6 @@
             document.getElementById('p-name').innerText = person.name;
             document.getElementById('p-role').innerText = person.role;
             
-            // INJECT PHOTO
             const photoBox = document.querySelector('.photo-box');
             photoBox.innerHTML = `<img src="${person.img}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='https://cdn-icons-png.flaticon.com/512/847/847969.png'">`;
 
@@ -414,7 +430,7 @@
             }, 2000);
         }
 
-        // --- 5. MOVING STARS (BRIGHTER & MORE) ---
+        // --- 5. MOVING STARS ---
         const bgLayer = document.querySelector('.bg-layer');
         for(let i=0; i<250; i++){
             let s = document.createElement('div');
