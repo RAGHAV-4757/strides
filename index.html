@@ -232,6 +232,19 @@
         @keyframes explode { 0% { transform: translate(-50%, -50%) scale(0); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(40); opacity: 0; } }
         @keyframes whiteFlash { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
 
+        /* --- DEVELOPER FOOTER --- */
+        .dev-footer {
+            position: fixed; bottom: 10px; right: 20px;
+            font-family: 'Rajdhani', sans-serif;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            text-align: right;
+            z-index: 10000;
+            pointer-events: none;
+            line-height: 1.2;
+        }
+        .dev-footer span { color: var(--primary); font-weight: bold; }
+
         /* --- MOBILE --- */
         @media (max-width: 768px) {
             .main-title { font-size: 3.5rem; }
@@ -240,6 +253,7 @@
             .dignitary-grid { grid-template-columns: 1fr; }
             .side-bot { width: 80px; } 
             .universal-poster-space { height: 300px; }
+            .dev-footer { font-size: 0.6rem; right: 10px; bottom: 5px; }
             
             @keyframes flyInCloseLeft { 100% { left: 0; top: 10%; } }
             @keyframes flyInCloseRight { 100% { right: 0; top: 10%; } }
@@ -257,6 +271,12 @@
                 <div class="ring"></div><div class="ring"></div><div class="ring"></div>
                 <div class="ring"></div><div class="ring"></div><div class="ring"></div>
             </div>
+        </div>
+
+        <div class="dev-footer">
+            Developed by<br>
+            <span>N.P.RAGHAWENDRA</span><br>
+            23A31A43I1
         </div>
 
         <div id="page-1" class="page-section active">
@@ -303,15 +323,17 @@
                         <h2 class="personal-name" id="p-name">Name</h2>
                         <p class="card-role" id="p-role" style="font-size:1.2rem;">Role</p>
                         <div class="photo-box"><span>Add Photo Here</span></div>
+                        
+                        <button class="enter-btn z-4" onclick="transitionToPoster()">CLICK HERE</button>
                     </div>
 
                     <div id="universal-content" style="display:none;">
                         <div class="universal-poster-space">
                             <img src="invites.jpeg" style="display:block; width:100%; height:100%; object-fit:contain;" onerror="this.style.display='none'; this.parentElement.innerText='Poster Not Found - Rename file to invites.jpeg'">
                         </div>
+                        <button class="enter-btn z-4" onclick="navigate('page-3', 'page-2', true)">BACK TO LIST</button>
                     </div>
                     
-                    <button class="enter-btn z-4" onclick="navigate('page-3', 'page-2', true)">BACK TO LIST</button>
                 </div>
             </div>
         </div>
@@ -326,7 +348,7 @@
     </div>
 
     <script>
-        // --- DATA (RENAME YOUR PHOTOS TO MATCH THESE) ---
+        // --- DATA ---
         const dignitaries = [
             { name: "Dr. P. Krishna Rao", role: "Chief Patron", img: "chairman.jpeg" },
             { name: "Sri. M.V. Haranatha Babu", role: "Director of Management", img: "director_m.jpeg" },
@@ -360,6 +382,7 @@
         // --- 3. OPEN FUNCTIONS ---
         function openPersonalInvite(index) {
             const person = dignitaries[index];
+            // Reset to Personal View
             document.getElementById('personal-content').style.display = 'block';
             document.getElementById('universal-content').style.display = 'none';
             
@@ -373,9 +396,21 @@
         }
 
         function openUniversalInvite() {
+            // Direct to Poster View
             document.getElementById('personal-content').style.display = 'none';
             document.getElementById('universal-content').style.display = 'block';
             navigate('page-2', 'page-3');
+        }
+
+        // NEW: Transition from Personal -> Poster with Animation
+        function transitionToPoster() {
+            navigate('page-3', 'page-3'); // Trigger animation loop
+            
+            // Swap content during the "White Flash" (approx 1000ms in)
+            setTimeout(() => {
+                document.getElementById('personal-content').style.display = 'none';
+                document.getElementById('universal-content').style.display = 'block';
+            }, 1000);
         }
 
         // --- 4. TRANSITION ---
